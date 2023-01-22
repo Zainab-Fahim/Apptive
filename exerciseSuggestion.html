@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exercise Accordions</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.3/axios.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./TW-ELEMENTS-PATH/dist/js/index.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="/dist/output.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    
+    body {
+      font-family: 'Poppins';
+    }
+      /* Style the input container */
+    #input-container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+       margin: 10px;
+    }
+    
+    /* Style the input field */
+    #muscle-input {
+      width: 50%;
+      padding: 12px 12px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+       margin: 10px;
+    }
+    
+    /* Style the submit button */
+    #submit-button {
+      width: 30%;
+      background-color: #7FA765;
+      color: white;
+      padding: 14px 14px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+       margin: 10px;
+    }
+    
+    /* Change background color on hover */
+    #submit-button:hover {
+      background-color: #3e8e41;
+    }
+    
+    /* Accordion styles */
+    .accordion {
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.4s;
+      background-color: rgba(109, 146, 84, 0.5);;
+      padding: 30px;
+      margin-bottom: 18px;
+      margin-left: 10px;
+      border-radius: 5px;
+    }
+    
+    /* Change the color of the button when it is active */
+    .active {
+      background-color: #ccc;
+    }
+    
+    /* Style the accordion panel */
+    .panel {
+      padding: 5px;
+      margin-left: 20px;
+      background-color: white;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease-out;
+    }
+
+  </style>
+  </head>
+  <body>
+    <div id="input-container">
+      <label for="muscle-input">Enter muscle:</label>
+      <input type="text" id="muscle-input" name="muscle-input">
+      <button id="submit-button">Submit</button>
+    </div>
+
+    <div id="accordion-container"></div>
+    
+    <script> 
+      // Axios request to retrieve the data
+      // Get the accordion container element
+      const accordionContainer = document.getElementById("accordion-container");
+      
+      function clearResults() {
+        while (accordionContainer.firstChild) {
+            accordionContainer.removeChild(accordionContainer.firstChild);
+        }
+      }
+      
+      const submitButton = document.getElementById("submit-button");
+      submitButton.addEventListener("click", function() {
+        clearResults();
+        var muscle = document.getElementById("muscle-input").value;
+        // use the muscle variable to make the API call
+            var apiKey = '715b99ad63mshdec036a24e0be79p1e48a7jsn7498c72e3105';
+            var url = 'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises?muscle=' + muscle;
+            axios.get(url, {
+              headers: {
+                'X-RapidAPI-Key': apiKey,
+                'X-RapidAPI-Host': 'exercises-by-api-ninjas.p.rapidapi.com'
+              }
+            })
+            .then(response => {
+              // Loop through the API response data
+              for (let i = 0; i < response.data.length; i++) {
+                // Create a new accordion button
+                const accordionButton = document.createElement("button");
+                accordionButton.classList.add("accordion");
+                accordionButton.textContent = response.data[i].name;
+      
+                // Create a new accordion panel
+                const accordionPanel = document.createElement("div");
+                accordionPanel.classList.add("panel");
+      
+                //creating hr
+                const hrLine1 = document.createElement("hr"); 
+                hrLine1.classList.add("border-t-4", "border-gray-200", "w-full");
+                const hrLine2 = document.createElement("hr"); 
+                hrLine2.classList.add("border-t-4", "border-gray-200", "w-full");
+                const hrLine3 = document.createElement("hr"); 
+                hrLine3.classList.add("border-t-4", "border-gray-200", "w-full");
+                const hrLine4 = document.createElement("hr"); 
+                hrLine4.classList.add("border-t-4", "border-gray-200", "w-full");
+                
+                // Create a new element for each property in the API response
+                const type = document.createElement("p");
+                type.style.padding = "5px";
+                type.textContent = `Type: ${response.data[i].type}`;
+                type.classList.add("capitalize", "font-medium","hover:text-green-800");
+      
+      
+                const muscle = document.createElement("p");
+                muscle.style.padding = "5px";
+                muscle.textContent = `Muscle: ${response.data[i].muscle}`;
+                muscle.classList.add("capitalize", "font-medium","hover:text-green-800");
+      
+                const equipment = document.createElement("p");
+                equipment.style.padding = "5px";
+                equipment.textContent = `Equipment: ${response.data[i].equipment}`;
+                equipment.classList.add("capitalize","font-medium","hover:text-green-800");
+      
+                const difficulty = document.createElement("p");
+                difficulty.style.padding = "5px";
+                difficulty.textContent = `Difficulty: ${response.data[i].difficulty}`;
+                difficulty.classList.add("capitalize","font-medium" ,"hover:text-green-800");
+                
+                const instructions = document.createElement("p");
+                instructions.textContent = `Instructions: ${response.data[i].instructions}`;
+                instructions.style.padding = "5px";
+                instructions.classList.add("font-medium" ,"hover:text-green-800");
+      
+            // Append the property elements to the accordion panel
+            accordionPanel.appendChild(type);
+            accordionPanel.appendChild(hrLine1);
+            accordionPanel.appendChild(muscle);
+            accordionPanel.appendChild(hrLine2);
+            accordionPanel.appendChild(equipment);
+            accordionPanel.appendChild(hrLine3);
+            accordionPanel.appendChild(difficulty);
+            accordionPanel.appendChild(hrLine4);
+            accordionPanel.appendChild(instructions);
+      
+            // Append the accordion button and panel to the container
+            accordionContainer.appendChild(accordionButton);
+            accordionContainer.appendChild(accordionPanel);
+      
+            // Add event listener to the accordion button
+            accordionButton.addEventListener("click", function() {
+              // Toggle the "active" class on the button
+              this.classList.toggle("active");
+              // Toggle the max-height of the panel
+              const panel = this.nextElementSibling;
+              if (panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+              } else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+              } 
+            });
+          }
+        })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        });
+    
+      
+    </script>
+  </body>
+</html>
