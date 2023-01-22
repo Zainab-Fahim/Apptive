@@ -1,0 +1,34 @@
+import twilio from 'twilio';
+import wixSecretsBackend from 'wix-secrets-backend';
+import { fetch } from 'wix-fetch';
+import wixData from 'wix-data';
+
+export async function sendTextMessage(toPhoneNumber) {
+    const twilioAuthToken = await wixSecretsBackend.getSecret('twilioAuthToken');
+    const twilioAccountSid = await wixSecretsBackend.getSecret('twilioAccountSid');
+    const twilioPhoneNumber = await wixSecretsBackend.getSecret('twilioPhoneNumber');
+
+    const twilioClient = new twilio(twilioAccountSid, twilioAuthToken)
+    //console.log(toPhoneNumber);
+    //let num = toPhoneNumber.splt('0')[1];
+    //console.log(num);
+    wixData.query("UserList")
+        .find()
+        .then((results) => {
+            console.log(results.items);
+            for (const i of results.items) {
+                let countryCode = '+94';
+                let phoneNum = i.phoneNumber
+                twilioClient.messages.create({
+                    "body": `hey, welcome to Apptive! We are happy to have you join us\n Remember the following\n 1. Prefix the word "add" when you enter details of food intake\n 2. Prefix the word "sub" when you enter details of any activity/workout done \n `,
+                    "from": `whatsapp:${twilioPhoneNumber}`,
+                    "to": `${phoneNum}`
+                })
+            }
+        })
+        .catch((error) => {
+            let errorMsg = error.message;
+            let code = error.code;
+            console.log(`ERROR !! ${code} - ${errorMsg}`);
+        });
+}
