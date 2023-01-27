@@ -32,3 +32,10 @@ Apptive is a web application that allows you to set up a WhatsApp chatbot to tra
 
 ## What's next for Apptive
 - We plan to incorporate many more innovative features to the application.
+
+## Apptive Links
+(Devpost)[https://devpost.com/software/apptive]
+(Video Demonstration)[https://youtu.be/Hf6CUPhp1Dg]
+(Project building process)[https://www.youtube.com/QHvhTc6ibKE]
+
+
